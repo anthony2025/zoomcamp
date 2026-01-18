@@ -40,6 +40,13 @@ LIMIT 1;
 
 
 ## Ingestion script
+
+Tables:
+- green_taxi_trips
+- yellow_taxi_trips
+- taxi_zone_lookup
+
+
 ```bash
 $ docker run -it \
       --network=pg_default \
@@ -49,8 +56,5 @@ $ docker run -it \
       --pg-host=pgdatabase \
       --pg-port=5432 \
       --pg-db=ny_taxi \
-      --target-table=green_taxi_trips \
-      --year=2025 \
-      --month=11 \
-      --chunksize=100000
+      --target-table=green_taxi_trips
 ```

@@ -36,25 +36,24 @@ parse_dates = [
 @click.option('--pg-host', default='localhost', help='PostgreSQL host')
 @click.option('--pg-port', default=5432, type=int, help='PostgreSQL port')
 @click.option('--pg-db', default='ny_taxi', help='PostgreSQL database name')
-@click.option('--target-table', default='green_taxi_data', help='Target table name')
+@click.option('--target-table', help='Target table name')
 def run(pg_user, pg_pass, pg_host, pg_port, pg_db, target_table):
     engine = create_engine(f'postgresql://{pg_user}:{pg_pass}@{pg_host}:{pg_port}/{pg_db}')
 
-
-    # Ingest NYC yellow taxi data
-    #url = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-1.csv.gz'
-    #df = pd.read_csv(url, dtype=dtype, parse_dates=parse_dates)
-
-    # Ingest NYC green taxi data
-    url = 'https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2025-11.parquet'
-    df = pd.read_parquet(url)
-
-    # Ingest taxi_zone_lookup
-    # url = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/misc/taxi_zone_lookup.csv'
-    # df = pd.read_csv(url)
+    match target_table:
+        case "green_taxi_trips":
+            url = 'https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2025-11.parquet'
+            df = pd.read_parquet(url)
+        case "yellow_taxi_trips":
+            url = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-1.csv.gz'
+            df = pd.read_csv(url, dtype=dtype, parse_dates=parse_dates)
+        case "taxi_zone_lookup":
+            url = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/misc/taxi_zone_lookup.csv'
+            df = pd.read_csv(url)
+        case _:
+            print("Invalid command ❌")
 
     print("fetched dataset")
-
 
 
     df.to_sql(
@@ -62,7 +61,7 @@ def run(pg_user, pg_pass, pg_host, pg_port, pg_db, target_table):
         con=engine,
         if_exists='replace'
     )
-    print("converted to SQL")
+    print("finished inserting")
 
 if __name__ == '__main__':
     run()
