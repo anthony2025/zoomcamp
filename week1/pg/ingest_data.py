@@ -40,9 +40,10 @@ parse_dates = [
 def run(pg_user, pg_pass, pg_host, pg_port, pg_db, target_table):
     engine = create_engine(f'postgresql://{pg_user}:{pg_pass}@{pg_host}:{pg_port}/{pg_db}')
 
+
     # Ingest NYC yellow taxi data
     #url = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-1.csv.gz'
-    #df = pd.read_csv(url)
+    #df = pd.read_csv(url, dtype=dtype, parse_dates=parse_dates)
 
     # Ingest NYC green taxi data
     url = 'https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2025-11.parquet'
@@ -53,6 +54,8 @@ def run(pg_user, pg_pass, pg_host, pg_port, pg_db, target_table):
     # df = pd.read_csv(url)
 
     print("fetched dataset")
+
+
 
     df.to_sql(
         name=target_table,
