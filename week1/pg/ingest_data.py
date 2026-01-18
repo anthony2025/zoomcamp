@@ -73,6 +73,7 @@ def ingest_data(
 
     print(f'done ingesting to {target_table}')
 
+
 @click.command()
 @click.option('--pg-user', default='root', help='PostgreSQL username')
 @click.option('--pg-pass', default='root', help='PostgreSQL password')
