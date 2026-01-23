@@ -6,6 +6,7 @@ volumes:
   kestra_data:
     driver: local
 
+
 services:
   pgdatabase:
     image: postgres:18
@@ -52,6 +53,7 @@ services:
       - kestra_data:/app/storage
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp/kestra-wd:/tmp/kestra-wd
+      - ~/.gcp/credentials.json:/.gcp/credentials.json
     environment:
       KESTRA_CONFIGURATION: |
         datasources:
@@ -61,6 +63,11 @@ services:
             username: kestra
             password: k3str4
         kestra:
+          ai:
+            type: gemini
+            gemini:
+              model-name: gemini-2.5-flash
+              api-key: ${GEMINI_API_KEY}
           server:
             basicAuth:
               username: "admin@kestra.io" # it must be a valid email address
